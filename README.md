@@ -1,5 +1,3 @@
-# Vibration-Signal-Analysis
-Analyze vibration signal using python scipy, numpy and ipython
 
 Vibration Analysis
 ==================
@@ -259,4 +257,5 @@ Analysing vibration events
 
 
 .. image:: output_10_4.png
+
 
