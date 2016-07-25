@@ -6,14 +6,16 @@ Setup
 -----
 
 .. code:: bash
-virtualenv env
-source env/bin/activate
-pip install requirements.txt
+
+    virtualenv env
+    source env/bin/activate
+    pip install requirements.txt
 
 Run the ipython notebook notebook
 -----------------------------------
 .. code:: bash
-ipython notebook
+
+    ipython notebook
 
 
 Analysing vibration events
