@@ -1,9 +1,23 @@
 
-Vibration Analysis
+Signal Analysis
 ==================
 
-Analysing vibration events
+Setup
+-----
 
+.. code:: bash
+virtualenv env
+source env/bin/activate
+pip install requirements.txt
+
+Run the ipython notebook notebook
+-----------------------------------
+.. code:: bash
+ipython notebook
+
+
+Analysing vibration events
+==========================
 1. Import all the necessary library to process:
 -----------------------------------------------
 
@@ -15,7 +29,7 @@ Analysing vibration events
     import json
     import math
     import numpy as np
-    
+
 
 2. Helper code for processing the data
 --------------------------------------
@@ -24,14 +38,14 @@ Analysing vibration events
 
     def splitAndConvert(value,splitter = ' '):
     	return map(float,value.split(splitter))
-    
+
     def getRMSData(x,y,z):
     	return [ math.sqrt((x[i]*x[i])+(y[i]*y[i])+(z[i]*z[i]))  for i in xrange(0,2048)]
-    
-    
+
+
     def loadEvents():
     	events = []
-    	with open('vibration.json') as data_file:    
+    	with open('vibration.json') as data_file:
     	    	for line in data_file:
     			event = json.loads(line)
     			event['x'] =  splitAndConvert(event['value']['x']);
@@ -41,18 +55,18 @@ Analysing vibration events
     			del event['value'];
     			events.append(event)
     	return events
-    
-    
+
+
     def processPSD(events, axis):
     	psds = []
     	for event in events:
     		signal = np.array(event[axis], dtype=float)
     		fourier = np.fft.fft(signal*np.hanning(2048))
-    		psd = 2*((fourier.real * fourier.real)/(1600*2048)) 
+    		psd = 2*((fourier.real * fourier.real)/(1600*2048))
     		psds.append(psd)
     	return psds
-    
-    
+
+
     def consolidatePSD(psds):
     		dArray = np.array(psds)
     		#print 'Data type                :', dArray.dtype
@@ -63,9 +77,9 @@ Analysing vibration events
     		vibrationTable = []
     		for i in xrange(0,2048):
     			vibrationTable.append(np.sum(dArray[:,i])/len(psds))
-    
+
     		return vibrationTable
-    
+
     def processData():
     	events = loadEvents()
     	table = {}
@@ -74,7 +88,7 @@ Analysing vibration events
     	table['z'] = consolidatePSD(processPSD(events,'z'))
     	table['rms'] = consolidatePSD(processPSD(events,'rms'))
     	return table
-    
+
 
 3. Display sample data for 3 axis
 ---------------------------------
@@ -82,7 +96,7 @@ Analysing vibration events
 .. code:: python
 
     data = loadEvents()
-    print "No of Events recorded :", len(data) 
+    print "No of Events recorded :", len(data)
     plt.plot (data[0]['x'], label="x")
     plt.plot (data[0]['y'], label="y")
     plt.plot (data[0]['z'], label="z")
@@ -125,7 +139,7 @@ Analysing vibration events
     n = signal.size-3
     timestep = 0.000625
     freq = np.fft.fftfreq(n, d=timestep)
-    psd = (fourier.real * fourier.real)/(1600*2048) 
+    psd = (fourier.real * fourier.real)/(1600*2048)
     psd  = np.array(psd, dtype=float)
     psd[2:n-1] =  2* psd[2:n-1]
     plt.plot(freq[2:n/2], 10*np.log10(psd[2:n/2]),label="Signal after psd analysis")
@@ -158,38 +172,38 @@ Analysing vibration events
     # Compute the area using the composite trapezoidal rule.
     area = trapz(graph, dx=5)
     print("trapezoidal area x=", area)
-    
+
     # Compute the area using the composite Simpson's rule.
     area = simps(graph, dx=5)
     print("Simpson x =", area)
-    
+
     graph = data['y'][2:n/2-1]
     # Compute the area using the composite trapezoidal rule.
     area = trapz(graph, dx=5)
     print("trapezoidal area y=", area)
-    
+
     # Compute the area using the composite Simpson's rule.
     area = simps(graph, dx=5)
     print("Simpson y =", area)
-    
+
     graph = data['z'][2:n/2-1]
     # Compute the area using the composite trapezoidal rule.
     area = trapz(graph, dx=5)
     print("trapezoidal area z=", area)
-    
+
     # Compute the area using the composite Simpson's rule.
     area = simps(graph, dx=5)
     print("Simpson z =", area)
-    
+
     graph = data['rms'][2:n/2-1]
     # Compute the area using the composite trapezoidal rule.
     area = trapz(graph, dx=5)
     print("trapezoidal area rms=", area)
-    
+
     # Compute the area using the composite Simpson's rule.
     area = simps(graph, dx=5)
     print("Simpson rms =", area)
-    
+
     n = signal.size-3
     timestep = 0.000625
     freq = np.fft.fftfreq(n, d=timestep)
@@ -225,10 +239,10 @@ Analysing vibration events
     plt.plot(freq[2:120], data['rms'][2:120],label = 'rms axis' )
     plt.legend(loc='upper right')
     plt.show()
-    
-    
-    
-    
+
+
+
+
 
 
 .. parsed-literal::
